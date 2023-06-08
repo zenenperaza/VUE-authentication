@@ -1,6 +1,9 @@
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 
 class AuthService{
+
+    private jwt: Ref<string>
+    private error: Ref<string>
 
 
     constructor(){
@@ -9,42 +12,51 @@ class AuthService{
         
     }
 
-    getJwt(){
+    getJwt(): Ref<string> {
         return this.jwt
     }
 
-    getError(){
+    getError(): Ref<string> {
         return this.error
     }
 
-    async login (email, password){
+    async login (username:string, password:string): Promise<boolean>{
         try {
-            const res = await fetch('https://restful-booker.herokuapp.com/auth', {
+            const res = await fetch('https://dummyjson.com/auth/login', {
                 method: 'POST',
                 headers: {
                     'accept': 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: email,
-                    password: password
+                    'username': username,
+                    'password': password
                 })
             })
 
             const response = await res.json()
 
-            if ('error' in response) {
-                
-                this.error = "Login failed"
+            if ('error' in response) {                
+                this.error.value = "Login failed"
+                return false
+            } 
+
+            this.jwt.value = response.token
+
+            if(this.jwt.value){
+                return true
+            }else {
                 return false
             }
-
-            this.jwt = response.token
-            return true
+            
+        
 
         } catch (error) {
-            console.log(error);
+            this.error.value = "Login failed"
+            return false
             
         }
     }
 }
+
+export default AuthService
