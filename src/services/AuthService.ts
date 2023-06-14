@@ -1,5 +1,4 @@
 import { Ref, ref } from "vue";
-
 class AuthService{
 
     private jwt: Ref<string>
@@ -21,6 +20,7 @@ class AuthService{
     }
 
     async login (username:string, password:string): Promise<boolean>{
+
         try {
             const res = await fetch('https://dummyjson.com/auth/login', {
                 method: 'POST',
@@ -42,9 +42,12 @@ class AuthService{
             } 
 
             this.jwt.value = response.token
+            // $cookies.set("Auth", response.token)
+            // $session.start()
+            // $session.set('auth', response.token)
 
             if(this.jwt.value){
-                return true
+                return response.token
             }else {
                 return false
             }

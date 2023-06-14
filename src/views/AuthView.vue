@@ -30,14 +30,21 @@ import AuthService from '@/services/AuthService';
       const auth = new AuthService()
       const success = await auth.login(username.value, password.value)
 
-      if (success) {
+      if (success != false) {
+        // $cookies.set('auth', success)
         alert(success)
       } else {
-        alert(success)
+        alert('Error')
       }
     }
 
+    // const takeInfoFromUser = () => {
+    //   const token = $cookies.get('auth')
+    // }
 
+      // const getUserInfo = (){
+        // const token = $session.get('auth')
+      // }
 
 
 
